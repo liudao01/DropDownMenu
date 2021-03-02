@@ -5,6 +5,9 @@
 
 ![DropDownMenu.jpg](DropDownMenu.webp)  
 
+2021.3.2 
+--增加使用后的阴影.
+
 ## 添加依赖
 ### Step 1. Add the JitPack repository to your build file
 Add it in your root build.gradle at the end of repositories:  

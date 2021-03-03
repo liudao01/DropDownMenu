@@ -2,10 +2,12 @@ package com.heiko.dropwidget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -16,6 +18,8 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+
+import java.lang.reflect.Method;
 
 /**
  * @Description PopupWindow的一个封装工具类
@@ -33,6 +37,18 @@ public class DropPopupUtil {
      * @param yoff
      */
     public static PopupWindow showAsDropDown(Activity activity, View contentView, float heightScale, View anchor, int xoff, int yoff) {
+
+        int DaoHangHeight = 0;
+        if (isNavigationBarShowing(activity)) {
+
+            Log.d(TAG, "展示了底部导航栏");
+            DaoHangHeight = getDaoHangHeight(activity);
+        } else {
+            Log.d(TAG, "没有底部导航栏");
+            DaoHangHeight = 0;
+        }
+        Log.d(TAG, "showAsDropDown: DaoHangHeight = " + DaoHangHeight);
+
         DisplayMetrics outMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
         int mScreenHeight = outMetrics.heightPixels;
@@ -48,7 +64,7 @@ public class DropPopupUtil {
         Log.d(TAG, "anchor.getHeight() height = " + height);
 //        int allHeight = mScreenHeight - height;//总体高度
 //        int allHeight = mScreenHeight - location[1];//总体高度
-        int allHeight = mScreenHeight - location[1] - height;//总体高度
+        int allHeight = mScreenHeight - location[1] - height ;//总体高度
 
         final View viewById = contentView.findViewById(R.id.ll_other);
 
@@ -57,18 +73,13 @@ public class DropPopupUtil {
 //        linearParams.height = afterHeight;
 //        viewById.setLayoutParams(linearParams);
 
-        int DaoHangHeight = 0;
-        if (isNavigationBarShow(activity)) {
-            DaoHangHeight = getDaoHangHeight(activity);
-        }
-        Log.d(TAG, "showAsDropDown: DaoHangHeight = " + DaoHangHeight);
 
         int barHeight = 0;
         barHeight = getStatusBarHeight(activity);
 
         Log.d(TAG, "showAsDropDown: barHeight = " + barHeight);
         final PopupWindow popupWindow = new PopupWindow(contentView,
-                ViewGroup.LayoutParams.MATCH_PARENT, allHeight , true); //(int) (mScreenHeight * heightScale)
+                ViewGroup.LayoutParams.MATCH_PARENT, allHeight, true); //(int) (mScreenHeight * heightScale)
 //        final PopupWindow popupWindow = new PopupWindow(contentView,
 //                ViewGroup.LayoutParams.MATCH_PARENT, allHeight + getStatusBarHeight(activity), true); //(int) (mScreenHeight * heightScale)
 //        final PopupWindow popupWindow = new PopupWindow(contentView,
@@ -88,6 +99,69 @@ public class DropPopupUtil {
             }
         });
         return popupWindow;
+    }
+
+    private static boolean checkDeviceHasNavigationBar(Activity context) {
+        boolean hasNavigationBar = false;
+        Resources rs = context.getResources();
+        int id = rs.getIdentifier("config_showNavigationBar", "bool", "android");
+        if (id > 0) {
+            hasNavigationBar = rs.getBoolean(id);
+        }
+        try {
+            Class systemPropertiesClass = Class.forName("android.os.SystemProperties");
+            Method m = systemPropertiesClass.getMethod("get", String.class);
+            String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
+            if ("1".equals(navBarOverride)) {
+                hasNavigationBar = false;
+            } else if ("0".equals(navBarOverride)) {
+                hasNavigationBar = true;
+            }
+        } catch (Exception e) {
+
+        }
+        return hasNavigationBar;
+    }
+
+    public static boolean isNavigationBarShowing(Activity context) {
+        //判断手机底部是否支持导航栏显示
+        boolean haveNavigationBar = checkDeviceHasNavigationBar(context);
+        if (haveNavigationBar) {
+            if (Build.VERSION.SDK_INT >= 17) {
+                String brand = Build.BRAND;
+                String mDeviceInfo;
+                if (brand.equalsIgnoreCase("HUAWEI")) {
+                    mDeviceInfo = "navigationbar_is_min";
+                } else if (brand.equalsIgnoreCase("XIAOMI")) {
+                    mDeviceInfo = "force_fsg_nav_bar";
+                } else if (brand.equalsIgnoreCase("VIVO")) {
+                    mDeviceInfo = "navigation_gesture_on";
+                } else if (brand.equalsIgnoreCase("OPPO")) {
+                    mDeviceInfo = "navigation_gesture_on";
+                } else {
+                    mDeviceInfo = "navigationbar_is_min";
+                }
+
+                if (Settings.Global.getInt(context.getContentResolver(), mDeviceInfo, 0) == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static int getNavHeight(Activity context) {
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            //判断底部导航栏是否为显示状态
+            boolean navigationBarShowing = isNavigationBarShowing(context);
+            if (navigationBarShowing) {
+                int height = resources.getDimensionPixelSize(resourceId);
+                return height;
+            }
+        }
+        return 0;
     }
 
     private static int getStatusBarHeight(Activity context) {

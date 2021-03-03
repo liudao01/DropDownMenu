@@ -1,11 +1,18 @@
 package com.heiko.dropwidget;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -50,8 +57,12 @@ public class DropPopupUtil {
 //        linearParams.height = afterHeight;
 //        viewById.setLayoutParams(linearParams);
 
+        int DaoHangHeight = 0;
+        if (isNavigationBarShow(activity)) {
+            DaoHangHeight = getDaoHangHeight(activity);
+        }
         final PopupWindow popupWindow = new PopupWindow(contentView,
-                ViewGroup.LayoutParams.MATCH_PARENT, allHeight + 80, true); //(int) (mScreenHeight * heightScale)
+                ViewGroup.LayoutParams.MATCH_PARENT, allHeight + getStatusBarHeight(activity), true); //(int) (mScreenHeight * heightScale)
 //        final PopupWindow popupWindow = new PopupWindow(contentView,
 //                ViewGroup.LayoutParams.MATCH_PARENT, (int) (mScreenHeight * heightScale), true); //(int) (mScreenHeight * heightScale)
 //        popupWindow.setHeight(mScreenHeight);
@@ -70,6 +81,58 @@ public class DropPopupUtil {
         });
         return popupWindow;
     }
+
+    private static int getStatusBarHeight(Activity context) {
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    /**
+     * 判断是否显示虚拟导航栏
+     *
+     * @return
+     */
+    public static boolean isNavigationBarShow(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Display display = activity.getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            Point realSize = new Point();
+            display.getSize(size);
+            display.getRealSize(realSize);
+            return realSize.y != size.y;
+        } else {
+            boolean menu = ViewConfiguration.get(activity).hasPermanentMenuKey();
+            boolean back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+            if (menu || back) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    /**
+     * 获取导航栏高度
+     *
+     * @param context
+     * @return
+     */
+    public static int getDaoHangHeight(Activity context) {
+        int result = 0;
+        int resourceId = 0;
+        int rid = context.getResources().getIdentifier("config_showNavigationBar", "bool", "android");
+        if (rid != 0) {
+            resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+            int dimensionPixelSize = context.getResources().getDimensionPixelSize(resourceId);
+            return dimensionPixelSize;
+        } else
+            return 0;
+    }
+
 
     /**
      * @param activity

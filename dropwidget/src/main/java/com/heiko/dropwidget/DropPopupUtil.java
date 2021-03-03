@@ -61,8 +61,16 @@ public class DropPopupUtil {
         if (isNavigationBarShow(activity)) {
             DaoHangHeight = getDaoHangHeight(activity);
         }
+        Log.d(TAG, "showAsDropDown: DaoHangHeight = " + DaoHangHeight);
+
+        int barHeight = 0;
+        barHeight = getStatusBarHeight(activity);
+
+        Log.d(TAG, "showAsDropDown: barHeight = " + barHeight);
         final PopupWindow popupWindow = new PopupWindow(contentView,
-                ViewGroup.LayoutParams.MATCH_PARENT, allHeight + getStatusBarHeight(activity), true); //(int) (mScreenHeight * heightScale)
+                ViewGroup.LayoutParams.MATCH_PARENT, allHeight , true); //(int) (mScreenHeight * heightScale)
+//        final PopupWindow popupWindow = new PopupWindow(contentView,
+//                ViewGroup.LayoutParams.MATCH_PARENT, allHeight + getStatusBarHeight(activity), true); //(int) (mScreenHeight * heightScale)
 //        final PopupWindow popupWindow = new PopupWindow(contentView,
 //                ViewGroup.LayoutParams.MATCH_PARENT, (int) (mScreenHeight * heightScale), true); //(int) (mScreenHeight * heightScale)
 //        popupWindow.setHeight(mScreenHeight);

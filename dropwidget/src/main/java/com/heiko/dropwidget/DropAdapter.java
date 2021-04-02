@@ -94,6 +94,19 @@ public class DropAdapter<T extends DropBeanFlag> extends RecyclerView.Adapter<Dr
             }
             holder.tvTitle.setTextColor(selectColor);
         }
+
+        try {
+            if (data.getRedNumberPoint() > 0) {
+                holder.vRead.setVisibility(View.VISIBLE);
+                holder.vRead.setText(String.valueOf(data.getRedNumberPoint()));
+            } else {
+                holder.vRead.setVisibility(View.GONE);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         holder.layoutRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +140,7 @@ public class DropAdapter<T extends DropBeanFlag> extends RecyclerView.Adapter<Dr
 
     public static class DropViewHolder extends RecyclerView.ViewHolder {
         final TextView tvTitle;
+        final TextView vRead;
         final ImageView imgCheck;
         final View layoutRoot;
 
@@ -134,6 +148,7 @@ public class DropAdapter<T extends DropBeanFlag> extends RecyclerView.Adapter<Dr
             super(itemView);
             layoutRoot = itemView.findViewById(R.id.layout_item_root);
             tvTitle = itemView.findViewById(R.id.tv_drop_item_title);
+            vRead = itemView.findViewById(R.id.vRead);
             imgCheck = itemView.findViewById(R.id.img_drop_item_check);
         }
     }

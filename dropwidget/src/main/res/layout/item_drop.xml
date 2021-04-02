@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_item_root"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:background="#FFFFFF"
-    android:orientation="horizontal"
     android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:paddingLeft="16dp"
-    android:id="@+id/layout_item_root"
     android:paddingRight="16dp">
 
     <TextView
@@ -17,10 +17,24 @@
         android:text="FILCO"
         android:textColor="#666666" />
 
+    <TextView
+        android:id="@+id/vRead"
+        android:layout_width="18dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/shap_msg_bg"
+        android:gravity="center"
+        android:text="0"
+        android:layout_marginLeft="10dp"
+        android:textColor="#ffffffff"
+        android:textSize="10sp"
+        android:visibility="gone" />
+
     <View
-        android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="1px" />
+        android:layout_height="1px"
+        android:layout_weight="1" />
 
     <ImageView
         android:id="@+id/img_drop_item_check"

@@ -22,7 +22,13 @@ public class DropBean implements DropBeanFlag {
         this.name = name;
     }
 
+    public int getNumber() {
+        return number;
+    }
 
+    public void setNumber(int number) {
+        this.number = number;
+    }
 
     public int getId() {
         return id;
@@ -75,5 +81,10 @@ public class DropBean implements DropBeanFlag {
     public int getNoneTextColor() {
         return  0;
 //        return  Color.parseColor("#4d1a1a1a");
+    }
+
+    @Override
+    public int getRedNumberPoint() {
+        return number;
     }
 }

@@ -67,7 +67,9 @@ public class CustomActivity extends AppCompatActivity {
     private List<DropBeanFlag> initDatas() {
         List<DropBeanFlag> dropBeans = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            dropBeans.add(new DropBean(i, "item" + i));
+            DropBean dropBean = new DropBean(i, "item" + i);
+            dropBean.setNumber(i);
+            dropBeans.add(dropBean);
         }
         return dropBeans;
     }

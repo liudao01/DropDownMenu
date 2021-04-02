@@ -18,5 +18,8 @@ public interface DropBeanFlag {
     int getSelectTextColor();
     int getNoneTextColor();
 
+    //未读红色小点数字
+    int getRedNumberPoint();
+
 
 }

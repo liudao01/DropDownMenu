@@ -105,6 +105,8 @@ public class DropDownMenu {
         final DropAdapter dropAdapter = initRecyclerView(activity, dropBeans, defCheckedPos, root);
         final PopupWindow popupWindow = DropPopupUtil.showAsDropDown(
                 activity, root, heightScale, anchor);
+//        final PopupWindow popupWindow = DropPopupUtil.showAsDropDownCustom(
+//                activity, root, heightScale, anchor);
 
         if (dropAdapterItemClick != null) {
             dropAdapter.addOnItemClickListener(dropAdapterItemClick);

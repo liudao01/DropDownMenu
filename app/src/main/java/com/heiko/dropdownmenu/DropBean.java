@@ -15,11 +15,14 @@ public class DropBean implements DropBeanFlag {
     private int id;
     private String name;
     private boolean isChecked;
+    private int number;
 
     public DropBean(int id, String name) {
         this.id = id;
         this.name = name;
     }
+
+
 
     public int getId() {
         return id;

@@ -10,21 +10,26 @@
     <LinearLayout
         android:id="@+id/layout_custom_show"
         android:layout_width="match_parent"
+        android:background="@color/colorPrimary"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:background="@color/colorAccent" />
 
         <TextView
             android:id="@+id/tv_custom_show"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="80dp"
             android:gravity="center"
+            android:background="#FFFFFF"
             android:text="自定义Show" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/color_drop_divider" />
-
+            android:layout_height="20dp"
+            android:background="@color/colorAccent" />
     </LinearLayout>
 
 <!--    <FrameLayout-->
